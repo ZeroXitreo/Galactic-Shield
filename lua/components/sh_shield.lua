@@ -14,7 +14,7 @@ if CLIENT then
     function component:HUDPaint()
         ent = LocalPlayer():GetEyeTrace().Entity
         looksAtEntity = false
-        if ent and not ent:IsWorld() and ent:GetNWEntity("shield_owner") then
+        if self:CoveredUnderPP(ent) then
             self.owner = ent:GetNWEntity("shield_owner")
             self.entity = ent
             looksAtEntity = true
@@ -35,7 +35,7 @@ if CLIENT then
             ScrH() - sizeY - paddingH + (sizeY + paddingH) * (1 - component.chipMovement),
             sizeX,
             sizeY,
-            component:AllowedToPickup(self.owner, self.entity) and galactic.theme.colors.green or galactic.theme.colors.red)
+            component:AllowedToPickup(self.owner, self.entity) != false and galactic.theme.colors.green or galactic.theme.colors.red)
         draw.DrawText(
             ownerName,
             font,
@@ -76,19 +76,24 @@ if SERVER then
     end
 
     function component:wap(ply, ent)
-        ent.ahh = "yee"
         ent:SetNWEntity("shield_owner", ply)
     end
 end
 
 function component:PhysgunPickup(ply, ent)
-    return self:AllowedToPickup(ply, ent)
+    if self:CoveredUnderPP(ent) then
+        return self:AllowedToPickup(ply, ent)
+    end
+end
+
+function component:CoveredUnderPP(ent)
+    return not ent:IsWorld() and not ent:IsPlayer() and ent:GetNWEntity("shield_owner")
 end
 
 function component:AllowedToPickup(ply, ent)
     -- if ply:IsSuperAdmin() then return end
     if ply != ent:GetNWEntity("shield_owner") then return false end
-    return true
+    return
 end
 
 galactic:Register(component)
