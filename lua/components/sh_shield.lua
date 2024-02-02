@@ -1,19 +1,15 @@
 local component = {}
 component.dependency = {"theme"}
-component.namespace = "shield"
-component.title = "Shield"
+component.namespace = "shieldEngine"
+component.title = "Shield engine"
 component.chipMovement = 0
 component.owner = NULL
 component.entity = NULL
 
-function component:Constructor()
-    print("ahh")
-end
-
 if CLIENT then
     function component:HUDPaint()
-        ent = LocalPlayer():GetEyeTrace().Entity
-        looksAtEntity = false
+        local ent = LocalPlayer():GetEyeTrace().Entity
+        local looksAtEntity = false
         if self:CoveredUnderPP(ent) then
             self.owner = ent:GetNWEntity("shield_owner")
             self.entity = ent
@@ -21,14 +17,14 @@ if CLIENT then
         end
 
         self.chipMovement = galactic.theme:PredictNextMove(self.chipMovement, looksAtEntity and 1 or 0, 20)
-        font = "GalacticDefault"
-        paddingW = galactic.theme.rem / 2
-        paddingH = galactic.theme.rem / 4
-        ownerName = self.owner:Nick()
+        local font = "GalacticDefault"
+        local paddingW = galactic.theme.rem / 2
+        local paddingH = galactic.theme.rem / 4
+        local ownerName = self.owner:Nick()
         surface.SetFont(font)
-        fontW, fontH = surface.GetTextSize(ownerName)
-        sizeX = fontW + paddingW * 2
-        sizeY = paddingH * 2 + fontH
+        local fontW, fontH = surface.GetTextSize(ownerName)
+        local sizeX = fontW + paddingW * 2
+        local sizeY = paddingH * 2 + fontH
         draw.RoundedBox(
             galactic.theme.round,
             (ScrW() - sizeX) / 2,
@@ -48,34 +44,34 @@ end
 
 if SERVER then
     function component:PlayerSpawnedEffect(ply, model, ent)
-        component:wap(ply, ent)
+        component:OnEntitySpawn(ply, ent)
     end
     
     function component:PlayerSpawnedNPC(ply, ent)
-        component:wap(ply, ent)
+        component:OnEntitySpawn(ply, ent)
     end
     
     function component:PlayerSpawnedProp(ply, model, ent)
-        component:wap(ply, ent)
+        component:OnEntitySpawn(ply, ent)
     end
     
     function component:PlayerSpawnedRagdoll(ply, model, ent)
-        component:wap(ply, ent)
+        component:OnEntitySpawn(ply, ent)
     end
     
     function component:PlayerSpawnedSENT(ply, ent)
-        component:wap(ply, ent)
+        component:OnEntitySpawn(ply, ent)
     end
     
     function component:PlayerSpawnedSWEP(ply, ent)
-        component:wap(ply, ent)
+        component:OnEntitySpawn(ply, ent)
     end
     
     function component:PlayerSpawnedVehicle(ply, ent)
-        component:wap(ply, ent)
+        component:OnEntitySpawn(ply, ent)
     end
 
-    function component:wap(ply, ent)
+    function component:OnEntitySpawn(ply, ent)
         ent:SetNWEntity("shield_owner", ply)
     end
 end
