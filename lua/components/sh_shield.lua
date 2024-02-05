@@ -44,48 +44,15 @@ end
 
 if SERVER then
 
-    local PLAYER = FindMetaTable("Player")
-    if PLAYER.AddCount then
-        galactic.PLAYERAddCount = galactic.PLAYERAddCount or PLAYER.AddCount
-        function PLAYER:AddCount(Type, ent) -- self: Player
-            if IsValid(self) and IsValid(ent) then
+    function component:OnGamemodeLoaded()
+        local PLAYER = FindMetaTable("Player")
+        if PLAYER.AddCount then
+            galactic.PLAYERAddCountShield = galactic.PLAYERAddCountShield or PLAYER.AddCount
+            function PLAYER:AddCount(Type, ent) -- self: Player
                 component:OnEntitySpawn(self, ent)
+                return galactic.PLAYERAddCountShield(self, Type, ent)
             end
-            return galactic.PLAYERAddCount(self, Type, ent)
         end
-    end
-
-    function component:PlayerSpawnedEffect(ply, _, ent)
-        component:OnEntitySpawn(ply, ent)
-    end
-    
-    function component:PlayerSpawnedNPC(ply, ent)
-        component:OnEntitySpawn(ply, ent)
-    end
-    
-    function component:PlayerSpawnedProp(ply, _, ent)
-        component:OnEntitySpawn(ply, ent)
-    end
-    
-    function component:PlayerSpawnedRagdoll(ply, _, ent)
-        component:OnEntitySpawn(ply, ent)
-    end
-    
-    function component:PlayerSpawnedSENT(ply, ent)
-        print(ent)
-        component:OnEntitySpawn(ply, ent)
-    end
-    
-    function component:PlayerSpawnedSWEP(ply, ent)
-        component:OnEntitySpawn(ply, ent)
-    end
-    
-    function component:PlayerSpawnedVehicle(ply, ent)
-        component:OnEntitySpawn(ply, ent)
-    end
-    
-    function component:PlayerSpawnedVehicle(ply, ent)
-        component:OnEntitySpawn(ply, ent)
     end
 
     function component:OnEntitySpawn(ply, ent)
